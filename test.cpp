@@ -536,34 +536,34 @@ void MM_test() {
   cout << "[MatMul] 4096x768 x 768x64 takes: " << duration_cast<milliseconds>(end - start).count() << " milliseconds"
        << endl;
 
-  cout << "Result Matrix: " << endl;
-  for (auto& ct : res) {
-      Plaintext row_pt;
-        vector<double> row;
-        decryptor.decrypt(res[0], row_pt);
-        encoder.decode(row_pt, row);
+//   cout << "Result Matrix: " << endl;
+//   for (auto& ct : res) {
+//       Plaintext row_pt;
+//         vector<double> row;
+//         decryptor.decrypt(res[0], row_pt);
+//         encoder.decode(row_pt, row);
 
-        for (auto i = 0; i < 4096; i++) {
-            cout << row[i] << " ";
-        }
-        cout << endl;
-  }
-
-//   std::vector<std::vector<double>> matrix_4096x64 = mme.readMatrix("../data/calibration/matrix_output_m_128_k_64_batch_128.txt", 4096, 64);
-//   auto matrix_4096x64_T = mme.transposeMatrix(matrix_4096x64);
-
-//   // Calculate the error of the first column
-//   double average_err = 0.0;
-//   Plaintext res_pt;
-//   vector<double> mm_res;
-//   decryptor.decrypt(res[0], res_pt);
-//   encoder.decode(res_pt, mm_res);
-
-//   for (auto i = 0; i < 4096; i++) {
-//     average_err += fabs(mm_res[i] / 2.0 - matrix_4096x64_T[0][i]);
+//         for (auto i = 0; i < 4096; i++) {
+//             cout << row[i] << " ";
+//         }
+//         cout << endl;
 //   }
 
-//   std::cout << "Average error: " << average_err / 4096.0 << std::endl;
+  std::vector<std::vector<double>> matrix_4096x64 = mme.readMatrix("./data/matrix_output_m_128_k_64_batch_128.txt", 4096, 64);
+  auto matrix_4096x64_T = mme.transposeMatrix(matrix_4096x64);
+
+  // Calculate the error of the first column
+  double average_err = 0.0;
+  Plaintext res_pt;
+  vector<double> mm_res;
+  decryptor.decrypt(res[0], res_pt);
+  encoder.decode(res_pt, mm_res);
+
+  for (auto i = 0; i < 4096; i++) {
+    average_err += fabs(mm_res[i] / 2.0 - matrix_4096x64_T[0][i]);
+  }
+
+  std::cout << "Average error: " << average_err / 4096.0 << std::endl;
 }
 
 int main() {
